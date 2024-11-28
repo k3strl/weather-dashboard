@@ -4,11 +4,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Define a City class with name and id properties
 class City {
-  private cityName: string;
-  private id: string; // UUID?
+  cityName: string;
+  id: string; // UUID?
 
-  constructor(name: string, id: string) {
-    this.name = name;
+  constructor(cityName: string, id: string) {
+    this.cityName = cityName;
     this.id = id;
   }
 }
@@ -23,7 +23,7 @@ class HistoryService {
   }
   // TODO: Define a write method that writes the updated cities array to the searchHistory.json file
   private async write(cities: City[]) {
-    // dump entire array to the searchHistory.json file OVERWRITING WHAT WAS THERE
+    // dump entire array to the searchHistory.json file, overwrting existing contents
     return await fs.writeFile('searchHistory.json', JSON.stringify(cities, null, '\t'));
   }
   // TODO: Define a getCities method that reads the cities from the searchHistory.json file and returns them as an array of City objects
@@ -38,7 +38,6 @@ class HistoryService {
       } catch (err) {
         parsedCities = [];
       }
-
       return parsedCities;
     });
   }
@@ -51,12 +50,12 @@ class HistoryService {
       throw new Error('search cannot be blank');
     }
     // Add a unique id to the state using uuid package
-    const newCity: City = { name: city, id: uuidv4() };
+    const newCity: City = { cityName: city, id: uuidv4() };
 
     // Get all cities, add the new city, write all the updated cities, return the newCity
     return await this.getCities()
       .then((cities) => {
-        if (cities.find((index) => index.name === city)) {
+        if (cities.find((index) => index.cityName === city)) {
           return cities;
         }
         return [...cities, newCity];
